@@ -1,0 +1,57 @@
+<?php
+
+/**
+ * Implements hook_ding_entity_fields
+ **/
+function ting_covers_ding_entity_fields() {
+  $display_full = array(
+          'reservation' => array(
+            'type' => 'hidden',
+          ),
+          'full' => array(
+            'type' => 'default',
+          ),
+        );
+  return array(
+    'ting_cover_work' => array(
+      'field' => array(
+        'locked' => FALSE,
+        'storage' => array(
+          'type' => 'virtual_field',
+        ),
+      ),
+      'instance' => array(
+        'ding_entity_type' => 'bibdkWorkEntity',
+        'label' => t('Cover image'),
+        'bundle' => 'bibdkWorkEntity',
+        'entity_type' => 'bibdkWorkEntity',
+        'display' => $display_full,
+      ),
+    ),
+    'ting_cover_manifestation' => array(
+      'field' => array(
+        'locked' => FALSE,
+        'storage' => array(
+          'type' => 'virtual_field',
+        ),
+      ),
+      'instance' => array(
+        'ding_entity_type' => 'bibdkManifestation',
+        'label' => t('Cover image'),
+        'bundle' => 'bibdkManifestation',
+        'entity_type' => 'bibdkManifestation',
+        'display' => $display_full,
+      ),
+    ),
+);
+
+
+}
+
+function ting_covers_update_7001() {
+  $fields = ting_covers_ding_entity_fields();
+  foreach ($fields as $field_name => $field) {
+        field_delete_field($field_name);
+      }
+  ding_entity_modules_enabled(array('ting_covers'));
+}

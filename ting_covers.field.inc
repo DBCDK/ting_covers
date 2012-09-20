@@ -10,7 +10,14 @@
  */
 function ting_covers_field_info() {
   return array(
-    'ting_cover' => array(
+    'ting_cover_work' => array(
+      'label' => t('Ting cover'),
+      'description' => t('Cover image from the ADDI service, if any.'),
+      'default_widget' => 'hidden',
+      'default_formatter' => 'ting_cover_work',
+      'no_ui' => TRUE,
+    ),
+    'ting_cover_manifestation' => array(
       'label' => t('Ting cover'),
       'description' => t('Cover image from the ADDI service, if any.'),
       'default_widget' => 'hidden',
@@ -25,9 +32,17 @@ function ting_covers_field_info() {
  */
 function ting_covers_field_load($entity_type, $entities, $field, $instances, $langcode, &$items, $age) {
   foreach ($entities as $id => $entity) {
-    $items[$id][0] = array(
-      'local_id' => $entity->localId,
-    );
+    //dpm($entity);
+    if ( isset($entity->localId) ) { // Ting object
+      $items[$id][0] = array(
+        'local_id' => $entity->localId,
+      );
+    } else { // bibdkWork object
+      $local_id = explode(':',$entity->ding_entity_id);
+      $items[$id][0] = array(
+        'local_id' => $local_id[1],
+      );
+    }
   }
 }
 
@@ -36,7 +51,7 @@ function ting_covers_field_load($entity_type, $entities, $field, $instances, $la
  */
 function ting_covers_widget_info_alter(&$info) {
   if (isset($info['hidden'])) {
-    $info['hidden']['field types'][] = 'ting_cover';
+    $info['hidden']['field types'][] = 'ting_cover_manifestation';
   }
 }
 
@@ -47,7 +62,14 @@ function ting_covers_field_formatter_info() {
   return array(
     'ting_cover_default' => array(
       'label' => t('Default'),
-      'field types' => array('ting_cover'),
+      'field types' => array('ting_cover_manifestation'),
+      'settings' => array(
+        'image_style' => 'medium',
+      ),
+    ),
+    'ting_cover_work' => array(
+      'label' => t('Default'),
+      'field types' => array('ting_cover_work'),
       'settings' => array(
         'image_style' => 'medium',
       ),
@@ -106,10 +128,9 @@ function ting_covers_field_formatter_view($entity_type, $entity, $field, $instan
       '#object' => $entity,
       '#image_style' => $display['settings']['image_style'],
       '#attached' => array(
-    	'js' => array(drupal_get_path('module', 'ting_covers') . '/js/ting-covers.js'),
-    ),
-  );
-
+        'js' => array(drupal_get_path('module', 'ting_covers') . '/js/ting-covers.js'),
+      ),
+    );
   }
   return $element;
 }

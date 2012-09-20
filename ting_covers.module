@@ -27,7 +27,7 @@ function ting_covers_menu() {
   $items['admin/config/ting/covers'] = array(
     'title' => 'Covers',
     'description' => 'Configure how covers are handled.',
-  	'page callback' => 'drupal_get_form',
+    'page callback' => 'drupal_get_form',
     'page arguments' => array('ting_covers_admin_settings_form'),
     'access arguments' => array('administer site configuration'),
     'file' => 'ting_covers.admin.inc',
@@ -43,7 +43,7 @@ function ting_covers_menu() {
   $items['admin/config/ting/covers/addi'] = array(
     'title' => 'ADDI service',
     'description' => 'Configure integration with the ADDI service.',
-  	'page callback' => 'drupal_get_form',
+    'page callback' => 'drupal_get_form',
     'page arguments' => array('ting_covers_admin_addi_settings_form'),
     'access arguments' => array('administer site configuration'),
     'file' => 'ting_covers.admin.inc',
@@ -100,8 +100,11 @@ function ting_covers_preprocess_ting_object(&$variables) {
   /*
    * Add the image style as a class, allowing templates to react on the size.
    */
-  if (isset($variables['elements']['ting_cover'][0])) {
-    $variables['classes_array'][] = drupal_html_class('imagestyle-' . $variables['elements']['ting_cover'][0]['#image_style']);
+  if (isset($variables['elements']['ting_cover_work'][0])) {
+    $variables['classes_array'][] = drupal_html_class('imagestyle-' . $variables['elements']['ting_cover_work'][0]['#image_style']);
+  }
+  if (isset($variables['elements']['ting_cover_manifestation'][0])) {
+    $variables['classes_array'][] = drupal_html_class('imagestyle-' . $variables['elements']['ting_cover_manifestation'][0]['#image_style']);
   }
 }
 
@@ -109,7 +112,7 @@ function ting_covers_preprocess_ting_object(&$variables) {
  * Delete ting covers files.
  *
  * @param int $time Timestamp where older files will be deleted.
- * 	Obmit or set to NULL to delete all files.
+ *  Obmit or set to NULL to delete all files.
  */
 function _ting_covers_delete_old_files($time = NULL) {
   //Collect potential locations of cover folders

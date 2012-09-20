@@ -1,18 +1,31 @@
 (function($) {
 
   Drupal.extractCoverData = function(e) {
+    var ids = new Array();
     classname = $(e).attr('class');
-    id = classname.match(/ting-cover-object-id-(\S+)/);
     imageStyle = classname.match(/ting-cover-style-(\S+)/);
-    if (!id) {
-      return false;
+    work_id = classname.match(/ting-cover-work-object-id-(\S+)/);
+    if (work_id) {
+      var len=work_id.length;
+      for(var i=0; i<len; i++) {
+        if (!work_id[i].match(/ting-cover-work-object-id/)) {
+          ids.push(work_id[i] + ':' + imageStyle[1]);
+        }
+      }
+      return ids;
     }
-    return id[1] + ':' + imageStyle[1];
+    id = classname.match(/ting-cover-object-id-(\S+)/);
+    ids.push(id[1] + ':' + imageStyle[1]);
+    if (ids) {
+      return ids;
+    }
+    return false;
   };
 
   Drupal.insertCovers = function(coverData) {
     $.each(coverData, function(coverInfo, url) {
       coverInfo = coverInfo.split(':');
+      $('.ting-cover-processing' + '.ting-cover-work-object-id-' + coverInfo[0] + '.ting-cover-style-' + coverInfo[1]).html('<img src="' + url + '"/>');
       $('.ting-cover-processing' + '.ting-cover-object-id-' + coverInfo[0] + '.ting-cover-style-' + coverInfo[1]).html('<img src="' + url + '"/>');
     });
   };
@@ -23,8 +36,10 @@
       //Assemble information regarding covers
       var coverData = [];
       $('.ting-cover:not(.ting-cover-processing, .ting-cover-processed)', context).each(function(i, e) {
-        coverData.push(Drupal.extractCoverData(e));
+        coverData = coverData.concat(Drupal.extractCoverData(e));
       }).addClass('ting-cover-processing');
+
+      coverData = jQuery.unique(coverData);
 
       if (coverData.length > 0) {
         //Retrieve covers

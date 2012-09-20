@@ -39,7 +39,7 @@
         coverData = coverData.concat(Drupal.extractCoverData(e));
       }).addClass('ting-cover-processing');
 
-      coverData = jQuery.unique(coverData);
+      // coverData = jQuery.unique(coverData);
 
       if (coverData.length > 0) {
         //Retrieve covers

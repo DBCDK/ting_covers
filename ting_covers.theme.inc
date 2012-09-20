@@ -26,7 +26,6 @@ function template_preprocess_ting_object_cover(&$variables) {
   switch ($object->ding_entity_type) {
     case 'bibdk_entity': // bibdkWork object
       $variables['classes'] = array('ting-cover',
-//                                    'ting-cover-object-id-'.$work_local_ids[0],
                                     'ting-cover-style-'.$variables['image_style']);
       foreach ($work_local_ids as $key => $local_id) {
         if ( !$path ) { // we'll just use the first available local image.

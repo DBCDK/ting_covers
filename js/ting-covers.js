@@ -24,7 +24,6 @@
 
   Drupal.insertCovers = function(coverData) {
     $.each(coverData, function(coverInfo, url) {
-      alert(coverInfo + ' : '+ url);
       coverInfo = coverInfo.split(':');
       $('.ting-cover-processing' + '.ting-cover-work-object-id-' + coverInfo[0] + '.ting-cover-style-' + coverInfo[1]).html('<img src="' + url + '" alt=""/>');
       $('.ting-cover-processing' + '.ting-cover-object-id-' + coverInfo[0] + '.ting-cover-style-' + coverInfo[1]).html('<img src="' + url + '" alt=""/>');
@@ -39,9 +38,6 @@
       $('.ting-cover:not(.ting-cover-processing, .ting-cover-processed)', context).each(function(i, e) {
         coverData = coverData.concat(Drupal.extractCoverData(e));
       }).addClass('ting-cover-processing');
-
-      alert(coverData.join(', '));
-      // coverData = jQuery.unique(coverData);
 
       if (coverData.length > 0) {
         //Retrieve covers

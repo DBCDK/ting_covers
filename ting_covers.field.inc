@@ -71,7 +71,7 @@ function ting_covers_field_formatter_info() {
       'label' => t('Default'),
       'field types' => array('ting_cover_work'),
       'settings' => array(
-        'image_style' => 'thumbnail',
+        'image_style' => 'medium',
       ),
     )
   );

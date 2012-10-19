@@ -23,7 +23,8 @@ function ting_covers_objects() {
       $covers[$local_id.':'.$image_style] = image_style_url($image_style, $path);
     } else {
       //Mark the image for retrieval;
-      $missing_images_local_ids[] = $local_id;
+      $missing_images_additional_informations_ids[] = $local_id;
+      $missing_images_local_ids[] = array('id'=>$local_id,'style'=>$image_style);
     }
   }
 
@@ -31,11 +32,11 @@ function ting_covers_objects() {
   try {
     $service = new AdditionalInformationService(variable_get('addi_wsdl_url'), variable_get('addi_username'), variable_get('addi_group'), variable_get('addi_password'));
     //Local ids = Faust numbers. Library object identifiers can be confusing...
-    $additional_informations = $service->getByFaustNumber($missing_images_local_ids);
+    $additional_informations = $service->getByFaustNumber($missing_images_additional_informations_ids);
     foreach($missing_images_local_ids as $local_id) {
       //Try to extract the image url from the result
       $source_url = FALSE;
-      if (isset($additional_informations[$local_id]) && $ai = $additional_informations[$local_id]) {
+      if (isset($additional_informations[$local_id['id']]) && $ai = $additional_informations[$local_id['id']]) {
         if ($ai->detailUrl) {
           $source_url = $ai->detailUrl;
         } elseif ($ai->thumbnailUrl) {
@@ -45,14 +46,14 @@ function ting_covers_objects() {
 
       //No cover image found? Cache this for future reference to avoid unnecessary requests
       if (!$source_url) {
-        cache_set('ting_covers:'.$local_id, 1, 'cache', $_SERVER['REQUEST_TIME'] + TING_COVERS_CACHE_LIFETIME);
+        cache_set('ting_covers:'.$local_id['id'], 1, 'cache', $_SERVER['REQUEST_TIME'] + TING_COVERS_CACHE_LIFETIME);
         continue;
       }
 
       //Try to download the image locally
-      if ($file = _ting_covers_pages_fetch_image(ting_covers_object_path($local_id), $source_url)) {
+      if ($file = _ting_covers_pages_fetch_image(ting_covers_object_path($local_id['id']), $source_url)) {
         //Generate a path corresponding to the downloaded image, styled
-        $covers[$local_id.':'.$image_style] = image_style_url($image_style, $file->uri);
+        $covers[$local_id['id'].':'.$local_id['style']] = image_style_url($local_id['style'], $file->uri);
       }
     }
   } catch (Exception $e) {

@@ -13,14 +13,14 @@ function ting_covers_field_info() {
     'ting_cover_work' => array(
       'label' => t('Ting cover'),
       'description' => t('Cover image from the ADDI service, if any.'),
-      'default_widget' => 'hidden',
+      'default_widget' => 'default',
       'default_formatter' => 'ting_cover_work',
       'no_ui' => TRUE,
     ),
     'ting_cover_manifestation' => array(
       'label' => t('Ting cover'),
       'description' => t('Cover image from the ADDI service, if any.'),
-      'default_widget' => 'hidden',
+      'default_widget' => 'default',
       'default_formatter' => 'ting_cover_default',
       'no_ui' => TRUE,
     ),

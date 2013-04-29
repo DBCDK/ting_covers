@@ -6,47 +6,6 @@
  */
 
 /**
- * Implements hook_field_info().
- */
-function ting_covers_field_info() {
-  return array(
-    'ting_cover_work' => array(
-      'label' => t('Ting cover'),
-      'description' => t('Cover image from the ADDI service, if any.'),
-      'default_widget' => 'default',
-      'default_formatter' => 'ting_cover_work',
-      'no_ui' => TRUE,
-    ),
-    'ting_cover_manifestation' => array(
-      'label' => t('Ting cover'),
-      'description' => t('Cover image from the ADDI service, if any.'),
-      'default_widget' => 'default',
-      'default_formatter' => 'ting_cover_default',
-      'no_ui' => TRUE,
-    ),
-  );
-}
-
-/**
- * Implements hook_field_load().
- */
-function ting_covers_field_load($entity_type, $entities, $field, $instances, $langcode, &$items, $age) {
-  foreach ($entities as $id => $entity) {
-    //dpm($entity);
-    if ( isset($entity->localId) ) { // Ting object
-      $items[$id][0] = array(
-        'local_id' => $entity->localId,
-      );
-    } else { // bibdkWork object
-      $local_id = explode(':',$entity->ding_entity_id);
-      $items[$id][0] = array(
-        'local_id' => $local_id[1],
-      );
-    }
-  }
-}
-
-/**
  * Implements hook_widget_info_alter().
  */
 function ting_covers_widget_info_alter(&$info) {

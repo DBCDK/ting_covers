@@ -33,6 +33,7 @@ function ting_covers_objects() {
     $service = new AdditionalInformationService(variable_get('addi_wsdl_url'), variable_get('addi_username'), variable_get('addi_group'), variable_get('addi_password'));
     //Local ids = Faust numbers. Library object identifiers can be confusing...
     $additional_informations = $service->getByFaustNumber($missing_images_additional_informations_ids);
+    dpm($additional_informations);
     foreach($missing_images_local_ids as $local_id) {
       //Try to extract the image url from the result
       $source_url = FALSE;

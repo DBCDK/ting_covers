@@ -32,6 +32,13 @@ function ting_covers_field_formatter_info() {
       'settings' => array(
         'image_style' => 'medium',
       ),
+    ),
+    'ting_backcover_work' => array(
+      'label' => t('Default'),
+      'field types' => array('ting_backcover_work'),
+      'settings' => array(
+        'image_style' => 'medium',
+      ),
     )
   );
 }
@@ -65,8 +72,7 @@ function ting_covers_field_formatter_settings_summary($field, $instance, $view_m
   $image_styles = image_style_options(FALSE);
   // Unset possible 'No defined styles' option.
   unset($image_styles['']);
-  // Styles could be lost because of enabled/disabled modules that defines
-  // their styles in code.
+  // Styles could be lost because of enabled/disabled modules that defines their styles in code.
   if (isset($image_styles[$settings['image_style']])) {
     $summary = t('Image style: @style', array('@style' => $image_styles[$settings['image_style']]));
   }

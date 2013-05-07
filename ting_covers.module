@@ -61,6 +61,11 @@ function ting_covers_theme() {
     'ting_object_cover' => array(
       'render element' => 'elements',
       'file' => 'ting_covers.theme.inc',
+      'template' => 'theme/ting-covers-object',
+      'preprocess functions' => array('template_preprocess_ting_object_cover'),
+      'attached' => array(
+        'js' => array(drupal_get_path('module', 'ting_covers') . '/js/ting-covers.js'),
+      ),
     ),
   );
 }
@@ -106,6 +111,9 @@ function ting_covers_preprocess_ting_object(&$variables) {
   if (isset($variables['elements']['ting_cover_manifestation'][0])) {
     $variables['classes_array'][] = drupal_html_class('imagestyle-' . $variables['elements']['ting_cover_manifestation'][0]['#image_style']);
   }
+  if (isset($variables['elements']['ting_backcover_work'][0])) {
+    $variables['classes_array'][] = drupal_html_class('imagestyle-' . $variables['elements']['ting_backcover_work'][0]['#image_style']);
+  }
 }
 
 /**
@@ -115,6 +123,7 @@ function ting_covers_preprocess_ting_object(&$variables) {
  *  Obmit or set to NULL to delete all files.
  */
 function _ting_covers_delete_old_files($time = NULL) {
+
   //Collect potential locations of cover folders
   $files_dir = file_default_scheme() . '://';
   $image_dirs = array($files_dir);
@@ -169,6 +178,15 @@ function _ting_covers_get_files($files_path) {
 /**
  * Return the path to the cover of the object.
  */
-function ting_covers_object_path($object_id) {
-  return file_default_scheme() . '://ting/covers/object/' . md5($object_id) . '.jpg';
+function ting_covers_object_path($object_id, $path = 'medium') {
+  switch ($path) {
+    case 'backcover_pdf':
+      return file_default_scheme() . '://ting/covers/object/' . $path . '/' . md5($object_id) . '.pdf';
+      break;
+    case 'medium':
+      return file_default_scheme() . '://ting/covers/object/' . $path . '/' . md5($object_id) . '.jpg';
+      break;
+    default: // Cover image
+      return NULL;
+  }
 }

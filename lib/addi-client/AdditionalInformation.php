@@ -4,13 +4,13 @@ class AdditionalInformation {
 
   public $thumbnailUrl;
   public $detailUrl;
-  public $backpageUrl;
+  public $backpagePdfUrl;
 
-  public function __construct($thumbnailUrl, $detailUrl, $backpageUrl)
+  public function __construct($thumbnailUrl, $detailUrl, $backpagePdfUrl)
   {
     $this->thumbnailUrl = $thumbnailUrl;
     $this->detailUrl = $detailUrl;
-    $this->backpageUrl = $backpageUrl;
+    $this->backpagePdfUrl = $backpagePdfUrl;
   }
 
 }

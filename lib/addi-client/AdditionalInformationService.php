@@ -117,13 +117,13 @@ class AdditionalInformationService {
           }
         }
 
-        // just pick the first one if there's several
+        // just pick the first back cover PDF, if there's several
         if ( !$backPageUrl && isset($info->backPage->_) && $info->backPage->_ )
         {
-          $backpageUrl = $info->backPage->_;
+          $backpagePdfUrl = $info->backPage->_;
         }
 
-        $additionalInfo = new AdditionalInformation($thumbnailUrl, $detailUrl, $backpageUrl);
+        $additionalInfo = new AdditionalInformation($thumbnailUrl, $detailUrl, $backpagePdfUrl);
         $additionalInformations[$info->identifier->$idName] = $additionalInfo;
 
       }

@@ -11,9 +11,9 @@ class TingCoversTestCase extends DrupalWebTestCase {
 
   public function setUp() {
 
-    $addi_info = array(	'wsdl_url' => 'test',
+    $addi_info = array( 'wsdl_url' => 'test',
                         'username' => 'test',
-                        'group' => 'test',
+                        'group'    => 'test',
                         'password' => 'test');
     $this->profile = 'minimal';
     parent::setUp('image', 'ting_covers');
@@ -23,15 +23,23 @@ class TingCoversTestCase extends DrupalWebTestCase {
       variable_set('addi_'.$k, $v);
     }
 
+    // allow you to log messages with error_log() to "sites/default/files/test.log"
+    $logfile = conf_path() . '/files/test.log';
+    ini_set('log_errors', 1);
+    ini_set('error_log', $logfile);
+
     $this->web_user = $this->drupalCreateUser(array('access content'));
     $this->drupalLogin($this->web_user);
   }
 
   public function testCoverRetrieval() {
-    $cover = "23959798:thumbnail";
-    $response = json_decode($this->simplePost('ting/covers', array('coverData[]' => $cover)));
+    // $cover = "23959798:thumbnail";
+    $coverData[] = "23959798:medium";
+    $response = json_decode($this->simplePost('ting/covers', $coverData));
+error_log($response);
 
     $this->assertTrue(isset($response->$cover), t('Local cover url for id %local_id returned', array('%local_id' => array_shift(explode(':', $cover)))), 'Ting covers');
+
     $this->assertTrue(filter_var($response->$cover, FILTER_VALIDATE_URL), t('Local cover url is valid url'), 'Ting covers');
   }
 
@@ -42,7 +50,6 @@ class TingCoversTestCase extends DrupalWebTestCase {
   protected function simplePost($path, $edit, array $options = array(), array $headers = array()) {
     $action = $this->getAbsoluteUrl($path);
     $post = $edit;
-
     foreach ($post as $key => $value) {
       // Encode according to application/x-www-form-urlencoded
       // Both names and values needs to be urlencoded.
@@ -51,7 +58,13 @@ class TingCoversTestCase extends DrupalWebTestCase {
 
     $post = implode('&', $post);
 
-    $out = $this->curlExec(array(CURLOPT_URL => $action, CURLOPT_POST => TRUE, CURLOPT_POSTFIELDS => $post, CURLOPT_HTTPHEADER => $headers));
+error_log($action);
+error_log(print_r($edit,1));
+
+    $out = $this->curlExec(array(CURLOPT_URL => $action, CURLOPT_POSTFIELDS => $post, CURLOPT_POST => TRUE, CURLOPT_HTTPHEADER => $headers));
+
+error_log($out);
+error_log('************************************************');
 
     // Ensure that any changes to variables in the other thread are picked up.
     $this->refreshVariables();

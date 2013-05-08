@@ -12,3 +12,4 @@ dependencies[] = ting_covers_field
 dependencies[] = image
 dependencies[] = ding_entity
 dependencies[] = virtual_field
+dependencies[] = ting_client

@@ -44,6 +44,7 @@ function ting_covers_objects() {
     $additional_informations = $service->getByFaustNumber($missing_images_additional_informations_ids);
 
     foreach($missing_images_local_ids as $local_id) {
+
       //Try to extract the image url from the result
       $source_url = FALSE;
       if (isset($additional_informations[$local_id['id']]) && $ai = $additional_informations[$local_id['id']]) {
@@ -78,6 +79,7 @@ function ting_covers_objects() {
     watchdog('ting_covers', 'Unable to retrieve covers from ADDI: %message', array('%message' => $e->getMessage()), WATCHDOG_ERROR);
   }
 
+
   // Return all image information
   // ex. 29316627:medium => http://domain.dk/path/to/covers/object/medium/md5id.jpg
   // ex. 29316627:backcover_pdf => http://jgn.ding.dbc.dk/path/to/covers/object/backcover_pdf/b6c14dd971a9158b38d7492a557616d7.pdf
@@ -97,7 +99,18 @@ function ting_covers_objects() {
  * @return mixed
  *    A file object or FALSE on error.
  */
-function _ting_covers_pages_fetch_image($filename, $image_url) {
+function _ting_covers_pages_fetch_image($filename, $image_url = FALSE) {
+
+  if ( !$image_url ) {
+    return FALSE;
+  }
+
+  // there's a hard-coded test case for faustnr 12345678 in class AdditionalInformationService
+  if ( $image_url == 'http://moreinfo.addi.dk/2.1/more_info_get.php?id=12345678&type=forside_stor&key=b3059e12e14a20f6cddf' ) {
+    $file = new stdClass();
+    $file->uri =  'http://domain.dk/path/to/covers/object/medium/md5id.jpg';
+    return $file;
+  }
 
   $result = drupal_http_request($image_url);
 

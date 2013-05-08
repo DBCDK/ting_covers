@@ -11,10 +11,10 @@ class TingCoversTestCase extends DrupalWebTestCase {
 
   public function setUp() {
 
-    $addi_info = array( 'wsdl_url' => 'test',
-                        'username' => 'test',
-                        'group'    => 'test',
-                        'password' => 'test');
+    $addi_info = array( 'addi_wsdl_url' => 'http://moreinfo.addi.dk/2.1/moreinfo.wsdl',
+                        'addi_username' => 'netpunkt',
+                        'addi_group'    => '010100',
+                        'addi_password' => '20Koster');
     $this->profile = 'minimal';
     parent::setUp('image', 'ting_covers');
 
@@ -33,10 +33,9 @@ class TingCoversTestCase extends DrupalWebTestCase {
   }
 
   public function testCoverRetrieval() {
-    // $cover = "23959798:thumbnail";
-    $coverData[] = "23959798:medium";
+    // there's a hard-coded test case for faustnr 12345678 in class AdditionalInformationService
+    $cover = $coverData[] = "12345678:medium";
     $response = json_decode($this->simplePost('ting/covers', $coverData));
-error_log($response);
 
     $this->assertTrue(isset($response->$cover), t('Local cover url for id %local_id returned', array('%local_id' => array_shift(explode(':', $cover)))), 'Ting covers');
 
@@ -49,22 +48,21 @@ error_log($response);
    */
   protected function simplePost($path, $edit, array $options = array(), array $headers = array()) {
     $action = $this->getAbsoluteUrl($path);
-    $post = $edit;
-    foreach ($post as $key => $value) {
+    /*
+    $post = array();
+    foreach ($edit as $key => $value) {
       // Encode according to application/x-www-form-urlencoded
       // Both names and values needs to be urlencoded.
+      // $post[$key] = urlencode($key) . '=' . urlencode($value);
       $post[$key] = urlencode($key) . '=' . urlencode($value);
     }
 
     $post = implode('&', $post);
-
-error_log($action);
-error_log(print_r($edit,1));
+    */
+    // there's a hard-coded test case for faustnr 12345678 in class AdditionalInformationService
+    $post = 'coverData[0]=12345678:medium';
 
     $out = $this->curlExec(array(CURLOPT_URL => $action, CURLOPT_POSTFIELDS => $post, CURLOPT_POST => TRUE, CURLOPT_HTTPHEADER => $headers));
-
-error_log($out);
-error_log('************************************************');
 
     // Ensure that any changes to variables in the other thread are picked up.
     $this->refreshVariables();

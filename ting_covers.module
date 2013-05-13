@@ -111,9 +111,6 @@ function ting_covers_preprocess_ting_object(&$variables) {
   if (isset($variables['elements']['ting_cover_manifestation'][0])) {
     $variables['classes_array'][] = drupal_html_class('imagestyle-' . $variables['elements']['ting_cover_manifestation'][0]['#image_style']);
   }
-  if (isset($variables['elements']['ting_backcover_work'][0])) {
-    $variables['classes_array'][] = drupal_html_class('imagestyle-' . $variables['elements']['ting_backcover_work'][0]['#image_style']);
-  }
 }
 
 /**

@@ -33,13 +33,6 @@ function ting_covers_field_formatter_info() {
         'image_style' => 'medium',
       ),
     ),
-    'ting_backcover_work' => array(
-      'label' => t('Default'),
-      'field types' => array('ting_backcover_work'),
-      'settings' => array(
-        'image_style' => 'medium',
-      ),
-    )
   );
 }
 

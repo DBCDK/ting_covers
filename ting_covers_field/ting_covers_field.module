@@ -27,13 +27,6 @@ function ting_covers_field_field_info() {
       'default_formatter' => 'ting_cover_default',
       'no_ui' => TRUE,
     ),
-    'ting_backcover_work' => array(
-      'label' => t('Ting backcover'),
-      'description' => t('Backcover image from the ADDI service, if any.'),
-      'default_widget' => 'default',
-      'default_formatter' => 'ting_backcover_work',
-      'no_ui' => TRUE,
-    ),
   );
 }
 

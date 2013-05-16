@@ -26,9 +26,9 @@
   Drupal.insertCovers = function(coverData) {
     $.each(coverData, function(coverInfo, url) {
       coverInfo = coverInfo.split(':');
-      var img = '<a class="ctools-use-modal ctools-use-modal-processed" href="/ting/moreinfo/covers/' + coverInfo[0] +'/null/nojs"><img src="' + url + '" alt=""/></a>';
-      $('.ting-cover-processing' + '.ting-cover-work-object-id-' + coverInfo[0] + '.ting-cover-style-' + coverInfo[1]).html(img);
-      $('.ting-cover-processing' + '.ting-cover-object-id-' + coverInfo[0] + '.ting-cover-style-' + coverInfo[1]).html(img);
+      var img = '<img src="' + url + '" alt=""/>';
+      $('.ting-cover-processing' + '.ting-cover-work-object-id-' + coverInfo[0] + '.ting-cover-style-' + coverInfo[1] + ' a.id-' + coverInfo[0]).removeClass('visuallyhidden').html(img);
+      $('.ting-cover-processing' + '.ting-cover-object-id-' + coverInfo[0] + '.ting-cover-style-' + coverInfo[1] + ' a.id-' + coverInfo[0]).removeClass('visuallyhidden').html(img);
       $('.ting-cover-processing' + '.ting-cover-work-object-id-' + coverInfo[0] + '.ting-cover-style-' + coverInfo[1]).parents('.work-cover-image').removeClass('visuallyhidden');
       // back cover
       if ( coverInfo[1] == 'backcover_pdf' ) {

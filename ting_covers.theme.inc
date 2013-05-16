@@ -22,6 +22,7 @@ function template_preprocess_ting_object_cover(&$variables) {
 
   $image_style = $variables['elements']['#image_style'];
   $alt = '';
+  $modal_link = '';
 
   //Set initial values required by the template, and check if there's an image available locally
   $path = FALSE;
@@ -40,9 +41,9 @@ function template_preprocess_ting_object_cover(&$variables) {
             $backcoverpdf_local_id = $lid;
           }
         }
-        $classes[] = 'ting-cover-work-object-id-'.$local_id;
+        $classes[] = 'ting-cover-work-object-id-'.$lid;
         // we don't know which local_id will be used, so we'll have to activate a modal path for all of them
-        $link = l('foobar', 'ting/moreinfo/covers/' . $lid . '/null');
+        $modal_link .= l('', 'ting/moreinfo/covers/' . $lid . '/foobar', array('attributes' => array('class'=>array('visuallyhidden', 'id-' . $lid))));
       }
       break;
     case 'bibdk_manifestation':
@@ -53,13 +54,13 @@ function template_preprocess_ting_object_cover(&$variables) {
                        'ting-cover-object-id-'.$local_id,
                        'ting-cover-style-'.$image_style);
       // Activate a modal path for this local_id (it's actually inserted by jQuery)
-      $link = l('foobar', 'ting/moreinfo/covers/' . $local_id . '/null');
+      $modal_link .= l('', 'ting/moreinfo/covers/' . $local_id . '/foobar', array('attributes' => array('class'=>array('visuallyhidden', 'id-' . $local_id))));
       break;
   }
 
   $variables['elements']['#classes'] = $classes;
 
-  $variables['elements']['#image'] = '';
+  $variables['elements']['#image'] = $modal_link;
 
   $variables['elements']['#no_image_class'] = ' visuallyhidden';
 

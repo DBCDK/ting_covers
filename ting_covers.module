@@ -24,9 +24,9 @@ function ting_covers_menu() {
     'file' => 'ting_covers.pages.inc',
   );
 
-  $items['ting/overlay/covers/%/%'] = array(
+  $items['ting/moreinfo/covers/%/%'] = array(
     'title' => '',
-    'page callback' => 'ting_covers_objects_overlay',
+    'page callback' => 'ting_covers_moreinfo_cover',
     'page arguments' => array(3,4),
     'access arguments' => array('access content'),
     'type'  => MENU_NORMAL_ITEM,
@@ -34,9 +34,9 @@ function ting_covers_menu() {
     'modal' => TRUE,
   );
 
-  $items['ting/overlay/back_covers/%'] = array(
+  $items['ting/moreinfo/back_covers/%'] = array(
     'title' => '',
-    'page callback' => 'ting_covers_backcover_overlay',
+    'page callback' => 'ting_covers_moreinfo_backcover',
     'page arguments' => array(3),
     'access arguments' => array('access content'),
     'type'  => MENU_NORMAL_ITEM,

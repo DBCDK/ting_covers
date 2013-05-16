@@ -41,6 +41,8 @@ function template_preprocess_ting_object_cover(&$variables) {
           }
         }
         $classes[] = 'ting-cover-work-object-id-'.$local_id;
+        // we don't know which local_id will be used, so we'll have to activate a modal path for all of them
+        $link = l('foobar', 'ting/moreinfo/covers/' . $lid . '/null');
       }
       break;
     case 'bibdk_manifestation':
@@ -50,12 +52,15 @@ function template_preprocess_ting_object_cover(&$variables) {
       $classes = array('ting-cover',
                        'ting-cover-object-id-'.$local_id,
                        'ting-cover-style-'.$image_style);
+      // Activate a modal path for this local_id (it's actually inserted by jQuery)
+      $link = l('foobar', 'ting/moreinfo/covers/' . $local_id . '/null');
       break;
   }
 
   $variables['elements']['#classes'] = $classes;
 
   $variables['elements']['#image'] = '';
+
   $variables['elements']['#no_image_class'] = ' visuallyhidden';
 
   //If we already have the image available locally then just use it
@@ -100,7 +105,7 @@ function template_preprocess_ting_object_cover(&$variables) {
 
     $variables['elements']['#image'] = l(
       theme('image_style', array('style_name' => $image_style, 'path' => $path, 'alt' => $alt)),
-      'ting/overlay/covers/' . $local_id . '/' . $alt,
+      'ting/moreinfo/covers/' . $local_id . '/' . $alt,
       array('html' => TRUE)
     );
 
@@ -129,7 +134,7 @@ function template_preprocess_ting_object_cover(&$variables) {
 
   $variables['elements']['#front_cover_large_link'] = l(
     '',
-    'ting/overlay/covers/' . $local_id . '/' . $alt,
+    'ting/moreinfo/covers/' . $local_id . '/' . $alt,
     array(
       'attributes' => array(
         'class' => $class,
@@ -148,7 +153,7 @@ function template_preprocess_ting_object_cover(&$variables) {
   $variables['elements']['#back_cover_large_link'] = l(
     '',
     // $GLOBALS['base_url'] . '/sites/default/files/ting/covers/backcover_pdf/' . md5($backcoverpdf_local_id) . '.pdf',
-    'ting/overlay/back_covers/' . $backcoverpdf_local_id,
+    'ting/moreinfo/back_covers/' . $backcoverpdf_local_id,
     array(
       'attributes' => array(
         'class' => $class,

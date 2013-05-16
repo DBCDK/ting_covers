@@ -95,7 +95,7 @@ function ting_covers_objects() {
 /**
  * page callback
  */
- function ting_covers_objects_overlay($local_id = NULL, $alt = ''){
+ function ting_covers_moreinfo_cover($local_id = NULL, $alt = ''){
 
     if ( !$local_id ) {
       return t('image ID is missing', array(), array('context' => 'ting_covers:error'));
@@ -115,7 +115,7 @@ function ting_covers_objects() {
 /**
  * page callback
  */
- function ting_covers_backcover_overlay($local_id = NULL){
+ function ting_covers_moreinfo_backcover($local_id = NULL){
 
     if ( !$local_id ) {
       return t('pdf ID is missing', array(), array('context' => 'ting_covers:error'));

@@ -21,6 +21,7 @@ function template_preprocess_ting_object_cover(&$variables) {
   }
 
   $image_style = $variables['elements']['#image_style'];
+  $alt = '';
 
   //Set initial values required by the template, and check if there's an image available locally
   $path = FALSE;
@@ -28,14 +29,15 @@ function template_preprocess_ting_object_cover(&$variables) {
   switch ($object->ding_entity_type) {
     case 'bibdk_entity': // bibdkWork object
       $classes = array('ting-cover', 'ting-cover-style-'.$image_style);
-      foreach ($work_local_ids as $key => $local_id) {
+      foreach ($work_local_ids as $key => $lid) {
         if ( !$path ) { // we'll just use the first available local image.
-          $path = ting_covers_object_path($local_id, $image_style);
+          if ( $path = ting_covers_object_path($lid, 'frontcover_jpg') ) {
+            $local_id = $lid;
+          }
         }
         if ( !$backcoverpdf_path ) { // ditto back cover pdf
-          $backcoverpdf_path = ting_covers_object_path($local_id, 'backcover_pdf');
-          if ( $backcoverpdf_path ) {
-            $backcoverpdf_local_id = $local_id;
+          if ( $backcoverpdf_path = ting_covers_object_path($lid, 'backcover_pdf') ) {
+            $backcoverpdf_local_id = $lid;
           }
         }
         $classes[] = 'ting-cover-work-object-id-'.$local_id;
@@ -43,7 +45,7 @@ function template_preprocess_ting_object_cover(&$variables) {
       break;
     case 'bibdk_manifestation':
     default: // Ting object
-      $path = ting_covers_object_path($local_id, $image_style);
+      $path = ting_covers_object_path($local_id, 'frontcover_jpg');
       $backcoverpdf_path = ting_covers_object_path($local_id, 'backcover_pdf');
       $classes = array('ting-cover',
                        'ting-cover-object-id-'.$local_id,
@@ -57,7 +59,8 @@ function template_preprocess_ting_object_cover(&$variables) {
   $variables['elements']['#no_image_class'] = ' visuallyhidden';
 
   //If we already have the image available locally then just use it
-  if (file_exists($path)) {
+  if ( file_exists($path) ) {
+
     //Generate an alt tag
     switch ($object->ding_entity_type) {
       case 'bibdk_entity': // bibdkWork object
@@ -95,26 +98,64 @@ function template_preprocess_ting_object_cover(&$variables) {
         break;
     }
 
-    $variables['elements']['#image'] = theme('image_style', array('style_name' => $image_style, 'path' => $path, 'alt' => $alt));
+    $variables['elements']['#image'] = l(
+      theme('image_style', array('style_name' => $image_style, 'path' => $path, 'alt' => $alt)),
+      'ting/overlay/covers/' . $local_id . '/' . $alt,
+      array('html' => TRUE)
+    );
+
     $variables['elements']['#no_image_class'] = '';
 
     //Avoid further javascript processing
     $variables['elements']['#classes'][] = 'ting-cover-processed';
+
   } elseif (cache_get('ting_covers:' . $local_id)) {
+
     //We know that there is no cover available for this object so avoid
     //further javascript processing
     $variables['elements']['#classes'][] = 'ting-cover-processed';
+
   }
 
   drupal_add_js(drupal_get_path('module', 'ting_covers') . '/js/ting-covers.js');
 
-  // ditto back cover pdf
-  $variables['elements']['#backcoverpdf_url'] = '#';
-  $variables['elements']['#no_backcoverpdf_class'] = ' visuallyhidden';
-  if ( file_exists($backcoverpdf_path) ) {
-    $variables['elements']['#backcoverpdf_url'] = $GLOBALS['base_url'] . '/sites/default/files/ting/covers/object/backcover_pdf/' . md5($backcoverpdf_local_id) . '.pdf';;
-    $variables['elements']['#no_backcoverpdf_class'] = '';
+  //front cover link:
+  $class = array('work-cover-front', 'active');
+  $disabled = false;
+  if ( !file_exists($backcoverpdf_path) ) {
+    $class[] = 'visuallyhidden';
+    $disabled = 'disabled';
   }
 
-}
+  $variables['elements']['#front_cover_large_link'] = l(
+    '',
+    'ting/overlay/covers/' . $local_id . '/' . $alt,
+    array(
+      'attributes' => array(
+        'class' => $class,
+      )
+    )
+  );
 
+  // ditto back cover pdf:
+  $class = array('work-cover-back');
+  $disabled = false;
+  if ( !file_exists($backcoverpdf_path) ) {
+    $class[] = 'visuallyhidden';
+    $disabled = 'disabled';
+  }
+
+  $variables['elements']['#back_cover_large_link'] = l(
+    '',
+    // $GLOBALS['base_url'] . '/sites/default/files/ting/covers/backcover_pdf/' . md5($backcoverpdf_local_id) . '.pdf',
+    'ting/overlay/back_covers/' . $backcoverpdf_local_id,
+    array(
+      'attributes' => array(
+        'class' => $class,
+        'disabled' => $disabled,
+      ),
+      'html' => FALSE
+    )
+  );
+
+}

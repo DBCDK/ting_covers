@@ -24,6 +24,28 @@ function ting_covers_menu() {
     'file' => 'ting_covers.pages.inc',
   );
 
+  $items['ting/overlay/covers/%/%'] = array(
+    'title' => '',
+    'page callback' => 'ting_covers_objects_overlay',
+    'page arguments' => array(3,4),
+    'access callback' => TRUE,
+    'access arguments' => array('access content'),
+    'type'  => MENU_NORMAL_ITEM,
+    'file'  => 'ting_covers.pages.inc',
+    'modal' => TRUE,
+  );
+
+  $items['ting/overlay/back_covers/%'] = array(
+    'title' => '',
+    'page callback' => 'ting_covers_backcover_overlay',
+    'page arguments' => array(3),
+    'access callback' => TRUE,
+    'access arguments' => array('access content'),
+    'type'  => MENU_NORMAL_ITEM,
+    'file'  => 'ting_covers.pages.inc',
+    'modal' => TRUE,
+  );
+
   $items['admin/config/ting/covers'] = array(
     'title' => 'Covers',
     'description' => 'Configure how covers are handled.',
@@ -53,6 +75,7 @@ function ting_covers_menu() {
   return $items;
 }
 
+
 /**
  * Implementation of hook_theme().
  */
@@ -70,6 +93,7 @@ function ting_covers_theme() {
   );
 }
 
+
 /**
  * Implementation of hook_cron().
  */
@@ -77,12 +101,14 @@ function ting_covers_cron() {
   _ting_covers_delete_old_files($_SERVER['REQUEST_TIME'] - variable_get('ting_covers_cache_lifetime', TING_COVERS_CACHE_LIFETIME));
 }
 
+
 /**
  * Implementation of hook_cache_clear().
  */
 function ting_covers_flush_caches() {
   _ting_covers_delete_old_files();
 }
+
 
 /**
  * Implements hook_ding_install_tasks().
@@ -136,7 +162,7 @@ function _ting_covers_delete_old_files($time = NULL) {
   //Collect cover files
   $cover_files = array();
   foreach ($image_dirs as $uri) {
-    $ting_covers_dir = $uri . DIRECTORY_SEPARATOR . 'ting' . DIRECTORY_SEPARATOR . 'covers';
+    $ting_covers_dir = $uri . DIRECTORY_SEPARATOR . 'ting' . DIRECTORY_SEPARATOR . 'covers' . DIRECTORY_SEPARATOR . 'frontcover_jpg';
     if (is_dir($ting_covers_dir)) {
       $cover_files = array_merge($cover_files, _ting_covers_get_files($ting_covers_dir));
     }
@@ -177,13 +203,19 @@ function _ting_covers_get_files($files_path) {
  */
 function ting_covers_object_path($object_id, $path = 'medium') {
   switch ($path) {
+    case 'frontcover_jpg':
+      return file_default_scheme() . '://ting/covers/frontcover_jpg/' . md5($object_id) . '.jpg';
+      break;
     case 'backcover_pdf':
-      return file_default_scheme() . '://ting/covers/object/' . $path . '/' . md5($object_id) . '.pdf';
+      return file_default_scheme() . '://ting/covers/backcover_pdf/' . md5($object_id) . '.pdf';
       break;
     case 'medium':
-      return file_default_scheme() . '://ting/covers/object/' . $path . '/' . md5($object_id) . '.jpg';
+      return file_default_scheme() . '://styles/medium/public/ting/covers/frontcover_jpg/' . md5($object_id) . '.jpg';
       break;
-    default: // Cover image
+    case 'large':
+      return file_default_scheme() . '://styles/large/public/ting/covers/frontcover_jpg/' . md5($object_id) . '.jpg';
+      break;
+    default:
       return NULL;
   }
 }

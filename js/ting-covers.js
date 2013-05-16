@@ -31,7 +31,8 @@
       $('.ting-cover-processing' + '.ting-cover-work-object-id-' + coverInfo[0] + '.ting-cover-style-' + coverInfo[1]).parents('.work-cover-image').removeClass('visuallyhidden');
       // back cover
       if ( coverInfo[1] == 'backcover_pdf' ) {
-        $('.ting-cover-processing' + '.ting-cover-work-object-id-' + coverInfo[0]).parents('.work-cover').find('.work-cover-selector').removeClass('visuallyhidden');
+        $('.ting-cover-processing' + '.ting-cover-work-object-id-' + coverInfo[0]).parents('.work-cover').find('.work-cover-front').removeClass('visuallyhidden');
+        $('.ting-cover-processing' + '.ting-cover-work-object-id-' + coverInfo[0]).parents('.work-cover').find('.work-cover-back').removeClass('visuallyhidden');
         $('.ting-cover-processing' + '.ting-cover-work-object-id-' + coverInfo[0]).parents('.work-cover').find('.work-cover-back').attr('href',url);
       }
     });

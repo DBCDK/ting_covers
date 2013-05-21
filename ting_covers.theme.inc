@@ -120,6 +120,7 @@ function template_preprocess_ting_object_cover(&$variables) {
     $variables['elements']['#image'] = l(
       theme('image_style', array('style_name' => $image_style, 'path' => $path, 'alt' => $alt)),
       $GLOBALS['base_url'] . '/sites/default/files/styles/large/public/ting/covers/frontcover_jpg/' . md5($local_id) . '.jpg',
+      // alternate page callback path, use:
       // 'ting/moreinfo/covers/' . $local_id . '/' . $alt,
       array(
         'html' => TRUE,

@@ -26,7 +26,7 @@ function ting_covers_objects() {
       break;
     }
 
-    $path = ting_covers_object_path($local_id, 'medium');
+    $path = ting_covers_object_path($local_id, 'frontcover_jpg');
 
     if ( file_exists($path) ) {
       //If we we already have a valid cover image w/o style then just use it
@@ -87,7 +87,7 @@ function ting_covers_objects() {
 
   // Return all image information
   // ex. 29316627:medium => http://domain.dk/path/to/covers/medium/md5id.jpg
-  // ex. 29316627:backcover_pdf => http://jgn.ding.dbc.dk/path/to/covers/backcover_pdf/b6c14dd971a9158b38d7492a557616d7.pdf
+  // ex. 29316627:backcover_pdf => http://domain.dk/path/to/covers/backcover_pdf/b6c14dd971a9158b38d7492a557616d7.pdf
   drupal_json_output($covers);
 }
 

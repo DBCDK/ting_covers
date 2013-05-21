@@ -13,8 +13,4 @@
       <?php print $elements['#back_cover_large_link'] ?>
     </div>
 
-    <div class="">
-      <?php print $elements['#modal_link'] ?>
-    </div>
-
   </div>

@@ -31,7 +31,6 @@ function ting_covers_menu() {
     'access arguments' => array('access content'),
     'type'  => MENU_NORMAL_ITEM,
     'file'  => 'ting_covers.pages.inc',
-    'modal' => TRUE,
   );
 
   $items['ting/moreinfo/back_covers/%'] = array(
@@ -41,7 +40,6 @@ function ting_covers_menu() {
     'access arguments' => array('access content'),
     'type'  => MENU_NORMAL_ITEM,
     'file'  => 'ting_covers.pages.inc',
-    'modal' => TRUE,
   );
 
   $items['admin/config/ting/covers'] = array(

@@ -144,6 +144,7 @@ function template_preprocess_ting_object_cover(&$variables) {
 
   drupal_add_js(drupal_get_path('module', 'ting_covers') . '/js/ting-covers.js');
 
+
   //front cover link:
   $options = array(
     'attributes' => array(
@@ -159,9 +160,11 @@ function template_preprocess_ting_object_cover(&$variables) {
   $variables['elements']['#front_cover_large_link'] = l(
     '',
     $GLOBALS['base_url'] . '/sites/default/files/styles/large/public/ting/covers/frontcover_jpg/' . md5($local_id) . '.jpg',
+    // alternate page callback path, use:
     // 'ting/moreinfo/covers/' . $local_id . '/' . $alt,
     $options
   );
+
 
   // ditto back cover pdf:
   $options = array(
@@ -179,6 +182,7 @@ function template_preprocess_ting_object_cover(&$variables) {
   $variables['elements']['#back_cover_large_link'] = l(
     '',
     $GLOBALS['base_url'] . '/sites/default/files/ting/covers/backcover_pdf/' . md5($backcoverpdf_local_id) . '.pdf',
+    // alternate page callback path, use:
     // 'ting/moreinfo/back_covers/' . $backcoverpdf_local_id,
     $options
   );

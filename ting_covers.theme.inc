@@ -43,7 +43,14 @@ function template_preprocess_ting_object_cover(&$variables) {
         }
         $classes[] = 'ting-cover-work-object-id-'.$lid;
         // we don't know which local_id will be used, so we'll have to activate a modal path for all of them
-        $modal_link .= l('', 'ting/moreinfo/covers/' . $lid . '/foobar', array('attributes' => array('class'=>array('visuallyhidden', 'id-' . $lid))));
+        $modal_link .= l(
+          '',
+          $GLOBALS['base_url'] . '/sites/default/files/styles/large/public/ting/covers/frontcover_jpg/' . md5($lid) . '.jpg',
+          // 'ting/moreinfo/covers/' . $lid . '/foobar',
+          array(
+            'attributes' => array('class'=>array('visuallyhidden', 'id-' . $lid), 'rel' => 'lightbox')
+          )
+        );
       }
       break;
     case 'bibdk_manifestation':
@@ -54,7 +61,13 @@ function template_preprocess_ting_object_cover(&$variables) {
                        'ting-cover-object-id-'.$local_id,
                        'ting-cover-style-'.$image_style);
       // Activate a modal path for this local_id (it's actually inserted by jQuery)
-      $modal_link .= l('', 'ting/moreinfo/covers/' . $local_id . '/foobar', array('attributes' => array('class'=>array('visuallyhidden', 'id-' . $local_id))));
+      $modal_link .= l(
+        '',
+        $GLOBALS['base_url'] . '/sites/default/files/styles/large/public/ting/covers/frontcover_jpg/' . md5($local_id) . '.jpg',
+        array(
+          'attributes' => array('class'=>array('visuallyhidden', 'id-' . $local_id), 'rel' => 'lightbox')
+        )
+      );
       break;
   }
 
@@ -106,8 +119,14 @@ function template_preprocess_ting_object_cover(&$variables) {
 
     $variables['elements']['#image'] = l(
       theme('image_style', array('style_name' => $image_style, 'path' => $path, 'alt' => $alt)),
-      'ting/moreinfo/covers/' . $local_id . '/' . $alt,
-      array('html' => TRUE)
+      $GLOBALS['base_url'] . '/sites/default/files/styles/large/public/ting/covers/frontcover_jpg/' . md5($local_id) . '.jpg',
+      // 'ting/moreinfo/covers/' . $local_id . '/' . $alt,
+      array(
+        'html' => TRUE,
+        'attributes' => array(
+          'rel' => 'lightbox',
+        )
+      )
     );
 
     $variables['elements']['#no_image_class'] = '';
@@ -126,42 +145,41 @@ function template_preprocess_ting_object_cover(&$variables) {
   drupal_add_js(drupal_get_path('module', 'ting_covers') . '/js/ting-covers.js');
 
   //front cover link:
-  $class = array('work-cover-front', 'active');
-  $disabled = false;
+  $options = array(
+    'attributes' => array(
+      'class' => array('work-cover-front', 'active'),
+      'rel' => 'lightbox',
+    )
+  );
   if ( !file_exists($backcoverpdf_path) ) {
-    $class[] = 'visuallyhidden';
-    $disabled = 'disabled';
+    $options['attributes']['class'][] = 'visuallyhidden';
+    $options['attributes']['disabled'] = 'disabled';
   }
 
   $variables['elements']['#front_cover_large_link'] = l(
     '',
-    'ting/moreinfo/covers/' . $local_id . '/' . $alt,
-    array(
-      'attributes' => array(
-        'class' => $class,
-      )
-    )
+    $GLOBALS['base_url'] . '/sites/default/files/styles/large/public/ting/covers/frontcover_jpg/' . md5($local_id) . '.jpg',
+    // 'ting/moreinfo/covers/' . $local_id . '/' . $alt,
+    $options
   );
 
   // ditto back cover pdf:
-  $class = array('work-cover-back');
-  $disabled = false;
+  $options = array(
+    'attributes' => array(
+      'class' => array('work-cover-back'),
+      'rel' => 'lightframe[|width:600px; height:900px; scrolling: auto;]',
+    ),
+    'html' => FALSE
+  );
   if ( !file_exists($backcoverpdf_path) ) {
-    $class[] = 'visuallyhidden';
-    $disabled = 'disabled';
+    $options['attributes']['class'][] = 'visuallyhidden';
+    $options['attributes']['disabled'] = 'disabled';
   }
 
   $variables['elements']['#back_cover_large_link'] = l(
     '',
-    // $GLOBALS['base_url'] . '/sites/default/files/ting/covers/backcover_pdf/' . md5($backcoverpdf_local_id) . '.pdf',
-    'ting/moreinfo/back_covers/' . $backcoverpdf_local_id,
-    array(
-      'attributes' => array(
-        'class' => $class,
-        'disabled' => $disabled,
-      ),
-      'html' => FALSE
-    )
+    $GLOBALS['base_url'] . '/sites/default/files/ting/covers/backcover_pdf/' . md5($backcoverpdf_local_id) . '.pdf',
+    // 'ting/moreinfo/back_covers/' . $backcoverpdf_local_id,
+    $options
   );
-
 }

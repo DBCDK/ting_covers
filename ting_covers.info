@@ -13,4 +13,4 @@ dependencies[] = image
 dependencies[] = ding_entity
 dependencies[] = virtual_field
 dependencies[] = ting_client
-dependencies[] = ctools_automodal
+dependencies[] = lightbox2

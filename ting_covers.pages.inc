@@ -95,13 +95,15 @@ function ting_covers_objects() {
 /**
  * page callback
  */
- function ting_covers_moreinfo_cover($local_id = NULL, $alt = ''){
+ function ting_covers_moreinfo_cover($local_id = NULL, $alt = 'foobar'){
 
     if ( !$local_id ) {
       return t('image ID is missing', array(), array('context' => 'ting_covers:error'));
     }
 
     $path = ting_covers_object_path($local_id, 'frontcover_jpg');
+
+    $alt = ( $alt == 'foobar' ) ? '' : $alt;
 
     if ( file_exists($path) ) {
       $output = theme('image_style', array('style_name' => 'large', 'path' => $path, 'alt' => $alt));
@@ -125,7 +127,7 @@ function ting_covers_objects() {
 
     if ( file_exists($path) ) {
       $src = $GLOBALS['base_url'] . '/sites/default/files/ting/covers/backcover_pdf/' . md5($local_id) . '.pdf';
-      $output = '<object data="' . $src . '?page=1&amp;view=Fit" type="application/pdf" width="100%" height="96%">
+      $output = '<object data="' . $src . '?page=1&amp;view=Fit" type="application/pdf" width="590" height="890">
         <p>It appears you don\'t have a PDF plugin for this browser.
            No biggie... you can <a href="' . $src . '">click here to download the PDF file.</a></p>
       </object>';

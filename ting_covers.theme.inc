@@ -45,10 +45,9 @@ function template_preprocess_ting_object_cover(&$variables) {
         // we don't know which local_id will be used, so we'll have to activate a modal path for all of them
         $modal_link .= l(
           '',
-          $GLOBALS['base_url'] . '/sites/default/files/styles/large/public/ting/covers/frontcover_jpg/' . md5($lid) . '.jpg',
-          // 'ting/moreinfo/covers/' . $lid . '/foobar',
+          'ting/moreinfo/covers/' . $lid . '/foobar',
           array(
-            'attributes' => array('class'=>array('visuallyhidden', 'id-' . $lid), 'rel' => 'lightbox')
+            'attributes' => array('class'=>array('visuallyhidden', 'id-' . $lid), 'rel' => 'lightframe[|width:350px; height:500px; scrolling: auto;]')
           )
         );
       }
@@ -63,9 +62,9 @@ function template_preprocess_ting_object_cover(&$variables) {
       // Activate a modal path for this local_id (it's actually inserted by jQuery)
       $modal_link .= l(
         '',
-        $GLOBALS['base_url'] . '/sites/default/files/styles/large/public/ting/covers/frontcover_jpg/' . md5($local_id) . '.jpg',
+        'ting/moreinfo/covers/' . $lid . '/foobar',
         array(
-          'attributes' => array('class'=>array('visuallyhidden', 'id-' . $local_id), 'rel' => 'lightbox')
+          'attributes' => array('class'=>array('visuallyhidden', 'id-' . $local_id), 'rel' => 'lightframe[|width:350; height:550px; scrolling: auto;]')
         )
       );
       break;
@@ -117,15 +116,14 @@ function template_preprocess_ting_object_cover(&$variables) {
         break;
     }
 
+    $alt = ( !empty($alt) ) ? $alt : 'foobar';
     $variables['elements']['#image'] = l(
       theme('image_style', array('style_name' => $image_style, 'path' => $path, 'alt' => $alt)),
-      $GLOBALS['base_url'] . '/sites/default/files/styles/large/public/ting/covers/frontcover_jpg/' . md5($local_id) . '.jpg',
-      // alternate page callback path, use:
-      // 'ting/moreinfo/covers/' . $local_id . '/' . $alt,
+      'ting/moreinfo/covers/' . $local_id . '/' . $alt,
       array(
         'html' => TRUE,
         'attributes' => array(
-          'rel' => 'lightbox',
+          'rel' => 'lightframe[|width:350; height:550px; scrolling: auto;]',
         )
       )
     );
@@ -150,7 +148,7 @@ function template_preprocess_ting_object_cover(&$variables) {
   $options = array(
     'attributes' => array(
       'class' => array('work-cover-front', 'active'),
-      'rel' => 'lightbox',
+      'rel' => 'lightframe[|width:350; height:550px; scrolling: auto;]',
     )
   );
   if ( !file_exists($backcoverpdf_path) ) {
@@ -158,11 +156,10 @@ function template_preprocess_ting_object_cover(&$variables) {
     $options['attributes']['disabled'] = 'disabled';
   }
 
+
   $variables['elements']['#front_cover_large_link'] = l(
     '',
-    $GLOBALS['base_url'] . '/sites/default/files/styles/large/public/ting/covers/frontcover_jpg/' . md5($local_id) . '.jpg',
-    // alternate page callback path, use:
-    // 'ting/moreinfo/covers/' . $local_id . '/' . $alt,
+    'ting/moreinfo/covers/' . $local_id . '/' . $alt,
     $options
   );
 
@@ -182,9 +179,7 @@ function template_preprocess_ting_object_cover(&$variables) {
 
   $variables['elements']['#back_cover_large_link'] = l(
     '',
-    $GLOBALS['base_url'] . '/sites/default/files/ting/covers/backcover_pdf/' . md5($backcoverpdf_local_id) . '.pdf',
-    // alternate page callback path, use:
-    // 'ting/moreinfo/back_covers/' . $backcoverpdf_local_id,
+    'ting/moreinfo/back_covers/' . $backcoverpdf_local_id,
     $options
   );
 }

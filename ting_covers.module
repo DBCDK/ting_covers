@@ -72,6 +72,12 @@ function ting_covers_menu() {
 }
 
 
+function ting_covers_admin_paths_alter(&$paths) {
+  $paths['ting/moreinfo/covers/*'] = FALSE;
+  $paths['ting/moreinfo/covers/*/*'] = FALSE;
+  $paths['ting/moreinfo/back_covers/*'] = FALSE;
+}
+
 /**
  * Implementation of hook_theme().
  */

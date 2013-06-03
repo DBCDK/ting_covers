@@ -1,7 +1,8 @@
 <?php
 
 function template_preprocess_ting_object_cover(&$variables) {
-  $object = $variables['object'] = $variables['elements']['#object'];
+
+  $object = $variables['elements']['#object'];
 
   switch ($object->ding_entity_type) {
     case 'bibdk_entity': // bibdkWork object
@@ -19,34 +20,65 @@ function template_preprocess_ting_object_cover(&$variables) {
       break;
   }
 
-  $variables['image_style'] = $variables['elements']['#image_style'];
+  $image_style = $variables['elements']['#image_style'];
+  $alt = '';
+  $modal_link = '';
 
   //Set initial values required by the template, and check if there's an image available locally
   $path = FALSE;
+  $backcoverpdf_path = $backcoverpdf_local_id = FALSE;
   switch ($object->ding_entity_type) {
     case 'bibdk_entity': // bibdkWork object
-      $variables['classes'] = array('ting-cover',
-                                    'ting-cover-style-'.$variables['image_style']);
-      foreach ($work_local_ids as $key => $local_id) {
+      $classes = array('ting-cover', 'ting-cover-style-'.$image_style);
+      foreach ($work_local_ids as $key => $lid) {
         if ( !$path ) { // we'll just use the first available local image.
-          $path = ting_covers_object_path($local_id);
+          if ( $path = ting_covers_object_path($lid, 'frontcover_jpg') ) {
+            $local_id = $lid;
+          }
         }
-        $variables['classes'][] = 'ting-cover-work-object-id-'.$local_id;
+        if ( !$backcoverpdf_path ) { // ditto back cover pdf
+          if ( $backcoverpdf_path = ting_covers_object_path($lid, 'backcover_pdf') ) {
+            $backcoverpdf_local_id = $lid;
+          }
+        }
+        $classes[] = 'ting-cover-work-object-id-'.$lid;
+        // we don't know which local_id will be used, so we'll have to activate a modal path for all of them
+        $modal_link .= l(
+          '',
+          'ting/moreinfo/covers/' . $lid . '/foobar',
+          array(
+            'attributes' => array('class'=>array('visuallyhidden', 'id-' . $lid), 'rel' => 'lightframe[|width:350px; height:500px; scrolling: auto;]')
+          )
+        );
       }
       break;
     case 'bibdk_manifestation':
     default: // Ting object
-      $path = ting_covers_object_path($local_id);
-      $variables['classes'] = array('ting-cover',
-                                    'ting-cover-object-id-'.$local_id,
-                                    'ting-cover-style-'.$variables['image_style']);
+      $path = ting_covers_object_path($local_id, 'frontcover_jpg');
+      $backcoverpdf_path = ting_covers_object_path($local_id, 'backcover_pdf');
+      $classes = array('ting-cover',
+                       'ting-cover-object-id-'.$local_id,
+                       'ting-cover-style-'.$image_style);
+      // Activate a modal path for this local_id (it's actually inserted by jQuery)
+      $modal_link .= l(
+        '',
+        'ting/moreinfo/covers/' . $lid . '/foobar',
+        array(
+          'attributes' => array('class'=>array('visuallyhidden', 'id-' . $local_id), 'rel' => 'lightframe[|width:350; height:550px; scrolling: auto;]')
+        )
+      );
       break;
   }
 
-  $variables['image'] = '';
+  $variables['elements']['#classes'] = $classes;
+
+  $variables['elements']['#image'] = $modal_link;
+
+  $variables['elements']['#no_image_class'] = ' visuallyhidden';
 
   //If we already have the image available locally then just use it
-  if (file_exists($path)) {
+  if ( file_exists($path) ) {
+
     //Generate an alt tag
     switch ($object->ding_entity_type) {
       case 'bibdk_entity': // bibdkWork object
@@ -84,17 +116,70 @@ function template_preprocess_ting_object_cover(&$variables) {
         break;
     }
 
-    $variables['image'] = theme('image_style', array('style_name' => $variables['image_style'], 'path' => $path, 'alt' => $alt));
+    $alt = ( !empty($alt) ) ? $alt : 'foobar';
+    $variables['elements']['#image'] = l(
+      theme('image_style', array('style_name' => $image_style, 'path' => $path, 'alt' => $alt)),
+      'ting/moreinfo/covers/' . $local_id . '/' . $alt,
+      array(
+        'html' => TRUE,
+        'attributes' => array(
+          'rel' => 'lightframe[|width:350; height:550px; scrolling: auto;]',
+        )
+      )
+    );
+
+    $variables['elements']['#no_image_class'] = '';
 
     //Avoid further javascript processing
-    $variables['classes'][] = 'ting-cover-processed';
+    $variables['elements']['#classes'][] = 'ting-cover-processed';
+
   } elseif (cache_get('ting_covers:' . $local_id)) {
+
     //We know that there is no cover available for this object so avoid
     //further javascript processing
-    $variables['classes'][] = 'ting-cover-processed';
-  }
-}
+    $variables['elements']['#classes'][] = 'ting-cover-processed';
 
-function theme_ting_object_cover($variables) {
-  return '<div class="' . implode(' ', $variables['classes']) . '">' . $variables['image'] . '</div>';
+  }
+
+  drupal_add_js(drupal_get_path('module', 'ting_covers') . '/js/ting-covers.js');
+
+
+  //front cover link:
+  $options = array(
+    'attributes' => array(
+      'class' => array('work-cover-front', 'active'),
+      'rel' => 'lightframe[|width:350; height:550px; scrolling: auto;]',
+    )
+  );
+  if ( !file_exists($backcoverpdf_path) ) {
+    $options['attributes']['class'][] = 'visuallyhidden';
+    $options['attributes']['disabled'] = 'disabled';
+  }
+
+
+  $variables['elements']['#front_cover_large_link'] = l(
+    '',
+    'ting/moreinfo/covers/' . $local_id . '/' . $alt,
+    $options
+  );
+
+
+  // ditto back cover pdf:
+  $options = array(
+    'attributes' => array(
+      'class' => array('work-cover-back'),
+      'rel' => 'lightframe[|width:600px; height:900px; scrolling: auto;]',
+    ),
+    'html' => FALSE
+  );
+  if ( !file_exists($backcoverpdf_path) ) {
+    $options['attributes']['class'][] = 'visuallyhidden';
+    $options['attributes']['disabled'] = 'disabled';
+  }
+
+  $variables['elements']['#back_cover_large_link'] = l(
+    '',
+    'ting/moreinfo/back_covers/' . $backcoverpdf_local_id,
+    $options
+  );
 }

@@ -24,6 +24,24 @@ function ting_covers_menu() {
     'file' => 'ting_covers.pages.inc',
   );
 
+  $items['ting/moreinfo/covers/%/%'] = array(
+    'title' => '',
+    'page callback' => 'ting_covers_moreinfo_cover',
+    'page arguments' => array(3,4),
+    'access arguments' => array('access content'),
+    'type'  => MENU_NORMAL_ITEM,
+    'file'  => 'ting_covers.pages.inc',
+  );
+
+  $items['ting/moreinfo/back_covers/%'] = array(
+    'title' => '',
+    'page callback' => 'ting_covers_moreinfo_backcover',
+    'page arguments' => array(3),
+    'access arguments' => array('access content'),
+    'type'  => MENU_NORMAL_ITEM,
+    'file'  => 'ting_covers.pages.inc',
+  );
+
   $items['admin/config/ting/covers'] = array(
     'title' => 'Covers',
     'description' => 'Configure how covers are handled.',
@@ -53,6 +71,13 @@ function ting_covers_menu() {
   return $items;
 }
 
+
+function ting_covers_admin_paths_alter(&$paths) {
+  $paths['ting/moreinfo/covers/*'] = FALSE;
+  $paths['ting/moreinfo/covers/*/*'] = FALSE;
+  $paths['ting/moreinfo/back_covers/*'] = FALSE;
+}
+
 /**
  * Implementation of hook_theme().
  */
@@ -61,9 +86,15 @@ function ting_covers_theme() {
     'ting_object_cover' => array(
       'render element' => 'elements',
       'file' => 'ting_covers.theme.inc',
+      'template' => 'theme/ting-covers-object',
+      'preprocess functions' => array('template_preprocess_ting_object_cover'),
+      'attached' => array(
+        'js' => array(drupal_get_path('module', 'ting_covers') . '/js/ting-covers.js'),
+      ),
     ),
   );
 }
+
 
 /**
  * Implementation of hook_cron().
@@ -72,12 +103,14 @@ function ting_covers_cron() {
   _ting_covers_delete_old_files($_SERVER['REQUEST_TIME'] - variable_get('ting_covers_cache_lifetime', TING_COVERS_CACHE_LIFETIME));
 }
 
+
 /**
  * Implementation of hook_cache_clear().
  */
 function ting_covers_flush_caches() {
   _ting_covers_delete_old_files();
 }
+
 
 /**
  * Implements hook_ding_install_tasks().
@@ -115,6 +148,7 @@ function ting_covers_preprocess_ting_object(&$variables) {
  *  Obmit or set to NULL to delete all files.
  */
 function _ting_covers_delete_old_files($time = NULL) {
+
   //Collect potential locations of cover folders
   $files_dir = file_default_scheme() . '://';
   $image_dirs = array($files_dir);
@@ -130,7 +164,7 @@ function _ting_covers_delete_old_files($time = NULL) {
   //Collect cover files
   $cover_files = array();
   foreach ($image_dirs as $uri) {
-    $ting_covers_dir = $uri . DIRECTORY_SEPARATOR . 'ting' . DIRECTORY_SEPARATOR . 'covers';
+    $ting_covers_dir = $uri . DIRECTORY_SEPARATOR . 'ting' . DIRECTORY_SEPARATOR . 'covers' . DIRECTORY_SEPARATOR . 'frontcover_jpg';
     if (is_dir($ting_covers_dir)) {
       $cover_files = array_merge($cover_files, _ting_covers_get_files($ting_covers_dir));
     }
@@ -169,6 +203,21 @@ function _ting_covers_get_files($files_path) {
 /**
  * Return the path to the cover of the object.
  */
-function ting_covers_object_path($object_id) {
-  return file_default_scheme() . '://ting/covers/object/' . md5($object_id) . '.jpg';
+function ting_covers_object_path($object_id, $path = 'medium') {
+  switch ($path) {
+    case 'frontcover_jpg':
+      return file_default_scheme() . '://ting/covers/frontcover_jpg/' . md5($object_id) . '.jpg';
+      break;
+    case 'backcover_pdf':
+      return file_default_scheme() . '://ting/covers/backcover_pdf/' . md5($object_id) . '.pdf';
+      break;
+    case 'medium':
+      return file_default_scheme() . '://styles/medium/public/ting/covers/frontcover_jpg/' . md5($object_id) . '.jpg';
+      break;
+    case 'large':
+      return file_default_scheme() . '://styles/large/public/ting/covers/frontcover_jpg/' . md5($object_id) . '.jpg';
+      break;
+    default:
+      return NULL;
+  }
 }

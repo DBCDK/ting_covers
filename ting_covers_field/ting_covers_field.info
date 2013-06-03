@@ -1,0 +1,6 @@
+name = Ting Covers field
+description = Displays covers for Ting objects and collections
+package = Ding!
+core = 7.x
+
+dependencies[] = virtual_field

@@ -44,7 +44,18 @@ function ting_covers_ding_entity_fields() {
         'label' => t('Cover image'),
         'bundle' => 'bibdkManifestation',
         'entity_type' => 'bibdkManifestation',
-        'display' => $display_full,
+        'display' =>  array(
+          'default' => array (
+            'label' => 'hidden',
+            'type' => 'hidden',
+          ),
+          'reservation' => array(
+            'type' => 'hidden',
+          ),
+          'full' => array(
+            'type' => 'hidden',
+          ),
+        ),
       ),
     ),
   );

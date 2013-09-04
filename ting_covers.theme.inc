@@ -154,7 +154,7 @@ function template_preprocess_ting_object_cover(&$variables) {
   if ( !file_exists($backcoverpdf_path) ) {
     $options['attributes']['class'][] = 'visuallyhidden';
     $options['attributes']['disabled'] = 'disabled';
-    $options['attributes']['title'] = t('Forside');
+
   }
     $options['attributes']['title'] = t('Forside');
 
@@ -177,7 +177,7 @@ function template_preprocess_ting_object_cover(&$variables) {
   if ( !file_exists($backcoverpdf_path) ) {
     $options['attributes']['class'][] = 'visuallyhidden';
     $options['attributes']['disabled'] = 'disabled';
-    $options['attributes']['title'] = t('Bagside');
+
   }
     $options['attributes']['title'] = t('Bagside');
 

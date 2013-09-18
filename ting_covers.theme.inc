@@ -2,6 +2,12 @@
 
 function template_preprocess_ting_object_cover(&$variables) {
 
+  // Quickfix to avoid notices from template_process;
+  $variables['classes_array'] = array();
+  $variables['attributes_array'] = NULL;
+  $variables['title_attributes_array'] = NULL;
+  $variables['content_attributes_array'] = NULL;
+
   $object = $variables['elements']['#object'];
 
   switch ($object->ding_entity_type) {
@@ -161,7 +167,7 @@ function template_preprocess_ting_object_cover(&$variables) {
 
   $variables['elements']['#front_cover_large_link'] = l(
     '',
-    'ting/moreinfo/covers/' . $local_id . '/' . $alt,
+    'ting/moreinfo/covers/' . $local_id . '/foobar' . $alt,
     $options
   );
 

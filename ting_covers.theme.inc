@@ -13,8 +13,10 @@ function template_preprocess_ting_object_cover(&$variables) {
   switch ($object->ding_entity_type) {
     case 'bibdk_entity': // bibdkWork object
       foreach ($object->manifestations as $key => $manifestation) {
-        $local_id = explode(':',$manifestation->ding_entity_id);
-        $work_local_ids[] = $local_id[1];
+        if ( isset($manifestation->ding_entity_id) ) {
+          $local_id = explode(':',$manifestation->ding_entity_id);
+          $work_local_ids[] = $local_id[1];
+        }
       }
       break;
     case 'bibdk_manifestation':
@@ -47,15 +49,17 @@ function template_preprocess_ting_object_cover(&$variables) {
             $backcoverpdf_local_id = $lid;
           }
         }
-        $classes[] = 'ting-cover-work-object-id-'.$lid;
-        // we don't know which local_id will be used, so we'll have to activate a modal path for all of them
-        $modal_link .= l(
-          '',
-          'ting/moreinfo/covers/' . $lid . '/foobar',
-          array(
-            'attributes' => array('class'=>array('visuallyhidden', 'id-' . $lid), 'rel' => 'lightframe[|width:350px; height:500px; scrolling: auto;]')
-          )
-        );
+        if ( !empty($lid) ) {
+          $classes[] = 'ting-cover-work-object-id-' . $lid;
+          // we don't know which local_id will be used, so we'll have to activate a modal path for all of them
+          $modal_link .= l(
+            '',
+            'ting/moreinfo/covers/' . $lid . '/foobar',
+            array(
+              'attributes' => array('class'=>array('visuallyhidden', 'id-' . $lid), 'rel' => 'lightframe[|width:350px; height:500px; scrolling: auto;]')
+            )
+          );
+        }
       }
       break;
     case 'bibdk_manifestation':
@@ -192,4 +196,18 @@ function template_preprocess_ting_object_cover(&$variables) {
     'ting/moreinfo/back_covers/' . $backcoverpdf_local_id,
     $options
   );
+
+  if ( !isset($variables['classes_array']) ) {
+    $variables['classes_array'] = array();
+  }
+  if ( !isset($variables['attributes_array']) ) {
+    $variables['attributes_array'] = array();
+  }
+  if ( !isset($variables['title_attributes_array']) ) {
+    $variables['title_attributes_array'] = array();
+  }
+  if ( !isset($variables['content_attributes_array']) ) {
+    $variables['content_attributes_array'] = array();
+  }
+
 }

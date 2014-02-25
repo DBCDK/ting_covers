@@ -36,8 +36,6 @@ function template_preprocess_ting_object_cover(&$variables) {
   $path = FALSE;
   $backcoverpdf_path = $backcoverpdf_local_id = FALSE;
 
-watchdog('ting_covers:entity_type', print_r($object->ding_entity_type,1), array(), WATCHDOG_NOTICE);
-
   switch ($object->ding_entity_type) {
     case 'bibdk_entity': // bibdkWork object
       $classes = array('ting-cover', 'ting-cover-style-'.$image_style);

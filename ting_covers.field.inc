@@ -19,13 +19,6 @@ function ting_covers_widget_info_alter(&$info) {
  */
 function ting_covers_field_formatter_info() {
   return array(
-    'ting_cover_default' => array(
-      'label' => t('Default'),
-      'field types' => array('ting_cover_manifestation'),
-      'settings' => array(
-        'image_style' => 'medium',
-      ),
-    ),
     'ting_cover_work' => array(
       'label' => t('Default'),
       'field types' => array('ting_cover_work'),

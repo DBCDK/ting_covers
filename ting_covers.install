@@ -32,7 +32,7 @@ function ting_covers_ding_entity_fields() {
         'display' => $display_full,
       ),
     ),
-    'ting_cover_manifestation' => array(
+/*    'ting_cover_manifestation' => array(
       'field' => array(
         'locked' => FALSE,
         'storage' => array(
@@ -57,7 +57,7 @@ function ting_covers_ding_entity_fields() {
           ),
         ),
       ),
-    ),
+    ),*/
   );
 }
 
@@ -68,3 +68,13 @@ function ting_covers_update_7001() {
   }
   ding_entity_modules_enabled(array('ting_covers'));
 }
+
+/** Delete cover field on manifestation
+*/
+function ting_covers_update_7005(){
+  $fields = array('ting_cover_manifestation');
+   foreach ($fields as $field_name) {
+     field_delete_field($field_name);
+   }
+}
+

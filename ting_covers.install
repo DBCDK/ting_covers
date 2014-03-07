@@ -32,7 +32,7 @@ function ting_covers_ding_entity_fields() {
         'display' => $display_full,
       ),
     ),
-/*    'ting_cover_manifestation' => array(
+    'ting_cover_manifestation' => array(
       'field' => array(
         'locked' => FALSE,
         'storage' => array(
@@ -50,14 +50,16 @@ function ting_covers_ding_entity_fields() {
             'type' => 'hidden',
           ),
           'reservation' => array(
+            'label' => 'hidden',
             'type' => 'hidden',
           ),
           'full' => array(
+            'label' => 'hidden',
             'type' => 'hidden',
           ),
         ),
       ),
-    ),*/
+    ),
   );
 }
 

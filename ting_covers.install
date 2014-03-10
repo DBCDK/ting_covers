@@ -50,9 +50,11 @@ function ting_covers_ding_entity_fields() {
             'type' => 'hidden',
           ),
           'reservation' => array(
+            'label' => 'hidden',
             'type' => 'hidden',
           ),
           'full' => array(
+            'label' => 'hidden',
             'type' => 'hidden',
           ),
         ),
@@ -68,3 +70,13 @@ function ting_covers_update_7001() {
   }
   ding_entity_modules_enabled(array('ting_covers'));
 }
+
+/** Delete cover field on manifestation
+*/
+function ting_covers_update_7005(){
+  $fields = array('ting_cover_manifestation');
+   foreach ($fields as $field_name) {
+     field_delete_field($field_name);
+   }
+}
+

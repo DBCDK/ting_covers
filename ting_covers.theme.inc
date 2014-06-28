@@ -166,7 +166,10 @@ function template_preprocess_ting_object_cover(&$variables) {
   //front cover link:
   $options = array(
     'attributes' => array(
-      'class' => array('work-cover-front', 'active'),
+      'class' => array(
+        'work-cover__selector',
+        'work-cover__selector--front',
+      ),
       'rel' => 'lightframe[|width:350; height:550px; scrolling: auto;]',
     )
   );
@@ -188,7 +191,10 @@ function template_preprocess_ting_object_cover(&$variables) {
   // ditto back cover pdf:
   $options = array(
     'attributes' => array(
-      'class' => array('work-cover-back'),
+      'class' => array(
+        'work-cover__selector',
+        'work-cover__selector--back',
+      ),
       'rel' => 'lightframe[|width:600px; height:900px; scrolling: auto;]',
     ),
     'html' => FALSE

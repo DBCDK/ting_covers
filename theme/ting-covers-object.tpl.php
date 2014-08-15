@@ -8,7 +8,9 @@
 <div class="work-cover">
 
   <div class="work-cover__image">
-    <?php print $elements['#image'] ?>
+    <div class="<?php print( implode(' ', $elements['#classes'])); ?>">
+      <?php print $elements['#image'] ?>
+    </div>
   </div>
 
   <div class="work-cover__selectors">

@@ -147,7 +147,7 @@ function template_preprocess_ting_object_cover(&$variables) {
       )
     );
 
-    $variables['elements']['#no_image_class'] = '';
+    $variables['elements']['#no_image_class'] = ' has-cover';
 
     //Avoid further javascript processing
     $variables['elements']['#classes'][] = 'ting-cover-processed';

@@ -30,6 +30,7 @@
       $('.ting-cover-processing' + '.ting-cover-work-object-id-' + coverInfo[0] + '.ting-cover-style-' + coverInfo[1] + ' a.id-' + coverInfo[0]).removeClass('visuallyhidden').html(img);
       $('.ting-cover-processing' + '.ting-cover-object-id-' + coverInfo[0] + '.ting-cover-style-' + coverInfo[1] + ' a.id-' + coverInfo[0]).removeClass('visuallyhidden').html(img);
       $('.ting-cover-processing' + '.ting-cover-work-object-id-' + coverInfo[0] + '.ting-cover-style-' + coverInfo[1]).parents('.work-cover-image').removeClass('visuallyhidden');
+      $('.ting-cover-processing' + '.ting-cover-work-object-id-' + coverInfo[0] + '.ting-cover-style-' + coverInfo[1]).closest('.work').addClass('has-cover');
       // back cover
       if ( coverInfo[1] == 'backcover_pdf' ) {
         $('.ting-cover-processing' + '.ting-cover-work-object-id-' + coverInfo[0]).parents('.work-cover').find('.work-cover-front').removeClass('visuallyhidden');
@@ -42,6 +43,7 @@
   Drupal.behaviors.tingCovers = {
 
     attach: function(context) {
+      $('.work-cover-image.has-cover', context).closest('.work').addClass('has-cover');
       //Assemble information regarding covers
       var coverData = [];
       $('.ting-cover:not(.ting-cover-processing, .ting-cover-processed)', context).each(function(i, e) {

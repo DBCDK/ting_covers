@@ -37,7 +37,8 @@ class TingCoversTestCase extends DrupalWebTestCase {
     $cover = $coverData[] = "12345678:medium";
     $response = json_decode($this->simplePost('ting/covers', $coverData));
 
-    $this->assertTrue(isset($response->$cover), t('Local cover url for id %local_id returned', array('%local_id' => array_shift(explode(':', $cover)))), 'Ting covers');
+    $cover_array = explode(':', $cover);
+    $this->assertTrue(isset($response->$cover), t('Local cover url for id %local_id returned', array('%local_id' => array_shift($cover_array))), 'Ting covers');
 
     $this->assertTrue(filter_var($response->$cover, FILTER_VALIDATE_URL), t('Local cover url is valid url'), 'Ting covers');
   }
